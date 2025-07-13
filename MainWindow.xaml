@@ -23,7 +23,7 @@
                 <NavigationViewItem Content="Profiles" Icon="People"/>
                 <NavigationViewItem Content="Settings" Icon="Setting"/>
                 <NavigationViewItemSeparator/>
-                <NavigationViewItem Content="Update" Icon="PostUpdate"/>
+                <NavigationViewItem Content="Update" Icon="Download"/>
             </NavigationView.MenuItems>
 
             <Frame x:Name="contentFrame">
