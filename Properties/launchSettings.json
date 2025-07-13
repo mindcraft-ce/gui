@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "mindcraft-ce (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "mindcraft-ce (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
