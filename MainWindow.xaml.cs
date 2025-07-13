@@ -34,11 +34,22 @@ namespace mindcraft_ce
             InitializeComponent();
             this.Title = "mindcraft-ce";
             TrySetSystemBackdrop(SystemBackdropType.Mica);
+            agentDisplayImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/minecraft.png"));
         }
 
         private void nvSample_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-
+            if (args.InvokedItemContainer != null)
+            {
+                // Get the page type from the Tag property
+                var navItemTag = args.InvokedItemContainer?.Tag.ToString();
+                if (string.IsNullOrEmpty(navItemTag)) return;
+                Type pageType = Type.GetType(navItemTag);
+                if (pageType != null && contentFrame.CurrentSourcePageType != pageType)
+                {
+                    contentFrame.Navigate(pageType);
+                }
+            }
         }
 
         public enum SystemBackdropType { Mica, DesktopAcrylic, DefaultColor }
@@ -163,6 +174,11 @@ namespace mindcraft_ce
                 m_acrylicController.Dispose();
                 m_acrylicController = null;
             }
+        }
+
+        private void agentDisplay_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            // Navigate to the AgentDisplayView.
         }
     }
 
