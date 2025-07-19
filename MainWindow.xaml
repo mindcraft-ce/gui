@@ -15,16 +15,17 @@
                         IsBackButtonVisible="Collapsed"
                         IsBackEnabled="False"
                         ItemInvoked="nvSample_ItemInvoked"
-                        IsSettingsVisible="False">
+                        IsSettingsVisible="False"
+                        x:FieldModifier="public">
 
-            <NavigationView.Header>
+            <!--<NavigationView.Header>
                 <TextBlock Text="mindcraft-ce" FontSize="24" FontWeight="Bold" Margin="12,0,0,0"/>
-            </NavigationView.Header>
+            </NavigationView.Header>-->
 
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Play" Icon="Play"/>
+                <NavigationViewItem Content="Play" Icon="Play" Tag="mindcraft_ce.Views.PlayView"/>
                 <NavigationViewItemSeparator/>
-                <NavigationViewItem Content="Profiles" Icon="People"/>
+                <NavigationViewItem Content="Profiles" Icon="People" Tag="mindcraft_ce.Views.AgentView"/>
                 <NavigationViewItem Content="Settings" Icon="Setting"/>
                 <NavigationViewItemSeparator/>
                 <NavigationViewItem Content="Update" Icon="Download" Tag="mindcraft_ce.Views.UpdatesView"/>
@@ -41,14 +42,14 @@
                     <Image x:Name="agentDisplayImage" Width="40"/>
 
                     <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
-                        <TextBlock x:Name="agentDisplayCount" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Text="0 agents online"/>
-                        <TextBlock x:Name="agentDisplayStatus" FontSize="12" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" TextTrimming="CharacterEllipsis" Text="Not connected"/>
+                        <TextBlock x:Name="agentDisplayCount" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Text="2 agents online"/>
+                        <TextBlock x:Name="agentDisplayStatus" FontSize="12" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" TextTrimming="CharacterEllipsis" Text="Connected to 127.0.0.1:55916"/>
                     </StackPanel>
 
                 </Grid>
             </NavigationView.PaneFooter>
 
-            <Frame x:Name="contentFrame">
+            <Frame x:Name="contentFrame" x:FieldModifier="public">
                 <Frame.ContentTransitions>
                     <TransitionCollection>
                         <NavigationThemeTransition/>

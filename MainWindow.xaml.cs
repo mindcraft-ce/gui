@@ -15,6 +15,8 @@ using Windows.Media.Playback;
 using WinRT; // For As Guid Attribute
 using WinRT.Interop;
 
+using mindcraft_ce.Views;
+
 namespace mindcraft_ce
 {
     public sealed partial class MainWindow : Window
@@ -35,6 +37,9 @@ namespace mindcraft_ce
             this.Title = "mindcraft-ce";
             TrySetSystemBackdrop(SystemBackdropType.Mica);
             agentDisplayImage.Source = new BitmapImage(new Uri("ms-appx:///Assets/minecraft.png"));
+
+            contentFrame.Navigate(typeof(PlayView));
+            nvSample.SelectedItem = nvSample.MenuItems.SingleOrDefault(item => item is NavigationViewItem nvi && nvi.Tag?.ToString() == "mindcraft_ce.Views.PlayView");
         }
 
         private void nvSample_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
@@ -42,14 +47,23 @@ namespace mindcraft_ce
             if (args.InvokedItemContainer != null)
             {
                 // Get the page type from the Tag property
-                var navItemTag = args.InvokedItemContainer?.Tag.ToString();
+                var container = args.InvokedItemContainer;
+                if (container.Tag == null) return;
+                var navItemTag = container.Tag.ToString();
                 if (string.IsNullOrEmpty(navItemTag)) return;
+
                 Type pageType = Type.GetType(navItemTag);
                 if (pageType != null && contentFrame.CurrentSourcePageType != pageType)
                 {
                     contentFrame.Navigate(pageType);
                 }
             }
+        }
+
+        private void agentDisplay_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            // Navigate to the PlayView
+            contentFrame.Navigate(typeof(PlayView));
         }
 
         public enum SystemBackdropType { Mica, DesktopAcrylic, DefaultColor }
@@ -123,7 +137,7 @@ namespace mindcraft_ce
             }
         }
 
-        private void Window_Closed_Backdrop(object sender, WindowEventArgs args) // Renamed from Window_Closed
+        private void Window_Closed_Backdrop(object sender, WindowEventArgs args)
         {
             ClearSystemBackdrop();
 
@@ -174,11 +188,6 @@ namespace mindcraft_ce
                 m_acrylicController.Dispose();
                 m_acrylicController = null;
             }
-        }
-
-        private void agentDisplay_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            // Navigate to the AgentDisplayView.
         }
     }
 
