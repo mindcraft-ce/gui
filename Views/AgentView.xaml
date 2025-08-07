@@ -10,29 +10,52 @@
     </Page.DataContext>
 
     <Grid>
-        <Grid>
+        <TextBlock
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            FontSize="18"
+            x:Name="messageBox"
+            Visibility="Collapsed"
+        />
+        
+        <Grid x:Name="AgentListGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="3*"/>
             </Grid.ColumnDefinitions>
 
-            <ListView
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <Button Margin="25,40,5,20" Grid.Row="0" x:Name="CreateButton" Click="CreateButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Glyph="&#xECC8;" VerticalAlignment="Center"/>
+                        <TextBlock Margin="5,0,0,0" Text="Create" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <ListView
                     x:Name="agentListView" 
                     ItemsSource="{Binding Agents}"
                     SelectionMode="Single"
                     SelectedItem="{Binding SelectedAgent, Mode=TwoWay}"
-                    Margin="0,70,0,0"
-                    Grid.Column="0">
+                    Margin="0,0,0,0"
+                    Grid.Row="1"
+                    >
 
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="models:Agent">
-                        <StackPanel Margin="10">
-                            <TextBlock Text="{x:Bind Name}" FontSize="24" FontWeight="Bold"/>
-                            <TextBlock Text="{x:Bind Model.Name}" FontSize="16"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Agent">
+                            <StackPanel Margin="10">
+                                <TextBlock Text="{x:Bind Name}" FontSize="24" FontWeight="Bold"/>
+                                <TextBlock Text="{x:Bind ModelInfo}" FontSize="16"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
 
             <!-- Show details of selected agent -->
             <Border

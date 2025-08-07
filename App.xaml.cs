@@ -36,6 +36,34 @@ namespace mindcraft_ce
         public App()
         {
             InitializeComponent();
+            this.UnhandledException += App_UnhandledException;
+        }
+
+        private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            // Mark the exception as handled so the app doesn't crash immediately.
+            e.Handled = true;
+
+            // Log the full exception details, including the stack trace.
+            // This is the most important part.
+            System.Diagnostics.Debug.WriteLine("====================================================");
+            System.Diagnostics.Debug.WriteLine("GLOBAL UNHANDLED EXCEPTION CAUGHT");
+            System.Diagnostics.Debug.WriteLine($"Exception: {e.Exception}");
+            System.Diagnostics.Debug.WriteLine("====================================================");
+
+            // OPTIONAL: Show a user-friendly dialog.
+            // You need a reference to the main window to do this.
+            var window = MainWindowInstance;
+            if (window != null)
+            {
+                new ContentDialog
+                {
+                    Title = "An Unexpected Error Occurred",
+                    Content = $"The application will now close.\n\nPlease report this error:\n{e.Message}",
+                    CloseButtonText = "OK",
+                    XamlRoot = window.Content.XamlRoot
+                }.ShowAsync();
+            }
         }
 
         /// <summary>

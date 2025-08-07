@@ -16,6 +16,8 @@
                         IsBackEnabled="False"
                         ItemInvoked="nvSample_ItemInvoked"
                         IsSettingsVisible="False"
+                        PaneClosing="nvSample_SizeChanged"
+                        PaneOpening="nvSample_SizeChanged"
                         x:FieldModifier="public">
 
             <!--<NavigationView.Header>
@@ -23,25 +25,32 @@
             </NavigationView.Header>-->
 
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Play" Icon="Play" Tag="mindcraft_ce.Views.PlayView"/>
+                <NavigationViewItem Content="Play"     Icon="Play"        Tag="mindcraft_ce.Views.PlayView"/>
                 <NavigationViewItemSeparator/>
-                <NavigationViewItem Content="Profiles" Icon="People" Tag="mindcraft_ce.Views.AgentView"/>
-                <NavigationViewItem Content="Settings" Icon="Setting"/>
+                <NavigationViewItem Content="Agents"   Icon="People"      Tag="mindcraft_ce.Views.AgentView"    IsEnabled="False"/>
+                <NavigationViewItem Content="Settings" Icon="Setting"     Tag="mindcraft_ce.Views.SettingsView" IsEnabled="False"/>
+                <NavigationViewItem Content="API Keys" Icon="Permissions" Tag="mindcraft_ce.Views.KeysView"     IsEnabled="False"/>
                 <NavigationViewItemSeparator/>
-                <NavigationViewItem Content="Update" Icon="Download" Tag="mindcraft_ce.Views.UpdatesView"/>
+                <NavigationViewItem Content="Update"   Icon="Download"    Tag="mindcraft_ce.Views.UpdatesView"/>
+                <NavigationViewItemSeparator/>
+                <NavigationViewItem Content="Ollama"                      Tag="mindcraft_ce.Views.OllamaView">
+                    <NavigationViewItem.Icon>
+                        <BitmapIcon UriSource="https://ollama.com/public/ollama.png" ShowAsMonochrome="True"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.MenuItems>
 
             <NavigationView.PaneFooter>
                 <Grid x:Name="agentDisplay" Padding="8" Margin="0,8" Visibility="Visible" Tapped="agentDisplay_Tapped" Background="Transparent">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="48"/>
+                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                         <!-- <ColumnDefinition Width="Auto"/> -->
                     </Grid.ColumnDefinitions>
 
-                    <Image x:Name="agentDisplayImage" Width="40"/>
+                    <Image x:Name="agentDisplayImage" Width="40" Height="40" HorizontalAlignment="Center" Margin="5"/>
 
-                    <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                    <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center" x:Name="agentDisplayTextPanel">
                         <TextBlock x:Name="agentDisplayCount" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Text="2 agents online"/>
                         <TextBlock x:Name="agentDisplayStatus" FontSize="12" Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" TextTrimming="CharacterEllipsis" Text="Connected to 127.0.0.1:55916"/>
                     </StackPanel>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ namespace mindcraft_ce.Models
     public class Agent : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
         public Agent()
         {
             Modes = new Modes();
@@ -20,8 +22,10 @@ namespace mindcraft_ce.Models
         [JsonProperty("name")]
         public string Name { get; set; }
 
+        public string FileName { get; set; }
+
         [JsonProperty("model")]
-        public Model Model { get; set; }
+        public Model ModelInfo { get; set; }
 
         [JsonProperty("is_checked")]
         private bool isChecked = true;

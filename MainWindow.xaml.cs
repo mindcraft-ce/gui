@@ -1,21 +1,24 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.IO;
 using System.Net.Http;
 using System.Runtime.InteropServices; // For DllImport
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.UI.Composition.SystemBackdrops; // For ISystemBackdropControllerWithAcrylicBackground
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
+using mindcraft_ce.Views;
+using Newtonsoft.Json.Linq;
 using Windows.Media;
 using Windows.Media.Playback;
 using WinRT; // For As Guid Attribute
 using WinRT.Interop;
-
-using mindcraft_ce.Views;
 
 namespace mindcraft_ce
 {
@@ -31,6 +34,30 @@ namespace mindcraft_ce
             get { return contentFrame; }
         }
 
+        public void UpdateNavigationView()
+        {
+            var installed = UpdatesView.GetMetadataSync()["installed"]?.Value<bool>() == true;
+            if (installed)
+            {
+                foreach (var item in nvSample.MenuItems)
+                {
+                    if (item is NavigationViewItem nvi && nvi.IsEnabled == false)
+                    {
+                        nvi.IsEnabled = true; // Enable all items if installed
+                    }
+                }
+            } else
+            {
+                foreach (var item in nvSample.MenuItems)
+                {
+                    if (item is NavigationViewItem nvi && nvi.IsEnabled == true && (new List<string> { "Agents", "Settings", "API Keys" }).Contains(nvi.Content))
+                    {
+                        nvi.IsEnabled = false; // Disable items if not installed
+                    }
+                }
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -40,6 +67,26 @@ namespace mindcraft_ce
 
             contentFrame.Navigate(typeof(PlayView));
             nvSample.SelectedItem = nvSample.MenuItems.SingleOrDefault(item => item is NavigationViewItem nvi && nvi.Tag?.ToString() == "mindcraft_ce.Views.PlayView");
+            
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            Microsoft.UI.WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hwnd);
+            var appWindow = AppWindow.GetFromWindowId(windowId);
+            string iconPath = Path.Combine(Windows.ApplicationModel.Package.Current.InstalledLocation.Path, "Assets/icon.ico");
+            appWindow.SetIcon(iconPath);
+
+            UpdateAgentDisplay(0, null, null);
+
+            var installed = UpdatesView.GetMetadataSync()["installed"]?.Value<bool>() == true;
+            if (installed)
+            {
+                foreach (var item in nvSample.MenuItems)
+                {
+                    if (item is NavigationViewItem nvi && nvi.IsEnabled == false)
+                    {
+                        nvi.IsEnabled = true; // Enable all items if installed
+                    }
+                }
+            }
         }
 
         private void nvSample_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
@@ -63,7 +110,65 @@ namespace mindcraft_ce
         private void agentDisplay_Tapped(object sender, TappedRoutedEventArgs e)
         {
             // Navigate to the PlayView
-            contentFrame.Navigate(typeof(PlayView));
+            // contentFrame.Navigate(typeof(PlayView));
+        }
+
+        public void UpdateAgentDisplay(int agentsOnline, string? host, string? port)
+        {
+            if (agentsOnline > 0)
+            {
+                if (agentsOnline > 1)
+                {
+                    agentDisplayCount.Text = $"{agentsOnline.ToString()} agents online";
+                }
+                else
+                {
+                    agentDisplayCount.Text = "1 agent online.";
+                }
+                if (port == "25565")
+                {
+                    agentDisplayStatus.Text = $"Connected to {host}";
+                }
+                else {
+                    agentDisplayStatus.Text = $"Connected to {host}:{port.ToString()}";
+                }
+
+            }
+            else
+            {
+                agentDisplayCount.Text = "Offline";
+                agentDisplayStatus.Text = "Not connected.";
+            }
+        }
+
+        private void nvSample_SizeChanged(object sender, object e)
+        {
+            if (sender is NavigationView navView)
+            {
+                if (!navView.IsPaneOpen)
+                {
+                    agentDisplayTextPanel.Visibility = Visibility.Collapsed;
+
+                    agentDisplay.Margin = new Thickness(0, 0, 0, 0);
+
+                    Grid.SetColumnSpan(agentDisplayImage, 2);
+
+                    double newSize = navView.CompactPaneLength - 24;
+                    // Debug.WriteLine($"CompactPaneLength: {navView.CompactPaneLength}, New Size: {newSize}");
+                    agentDisplayImage.Width = newSize;
+                    agentDisplayImage.Height = newSize; // Set height to maintain aspect ratio
+                }
+                else
+                {
+                    agentDisplay.Margin = new Thickness(0, 8, 0, 8);
+                    agentDisplayTextPanel.Visibility = Visibility.Visible;
+
+                    Grid.SetColumnSpan(agentDisplayImage, 1);
+
+                    agentDisplayImage.Width = 40;
+                    agentDisplayImage.Height = 40;
+                }
+            }
         }
 
         public enum SystemBackdropType { Mica, DesktopAcrylic, DefaultColor }
@@ -92,7 +197,7 @@ namespace mindcraft_ce
                     m_micaController.AddSystemBackdropTarget(this.As<Microsoft.UI.Composition.ICompositionSupportsSystemBackdrop>());
                     m_micaController.SetSystemBackdropConfiguration(m_configurationSource);
                     isApplied = true;
-                    System.Diagnostics.Debug.WriteLine("Mica backdrop applied successfully.");
+                    // System.Diagnostics.Debug.WriteLine("Mica backdrop applied successfully.");
                 }
                 else { System.Diagnostics.Debug.WriteLine("Mica backdrop is not supported on this system."); }
             }
@@ -115,7 +220,7 @@ namespace mindcraft_ce
                     m_acrylicController.AddSystemBackdropTarget(this.As<Microsoft.UI.Composition.ICompositionSupportsSystemBackdrop>());
                     m_acrylicController.SetSystemBackdropConfiguration(m_configurationSource);
                     isApplied = true;
-                    System.Diagnostics.Debug.WriteLine("Desktop Acrylic backdrop applied successfully.");
+                    // System.Diagnostics.Debug.WriteLine("Desktop Acrylic backdrop applied successfully.");
                 }
                 else { System.Diagnostics.Debug.WriteLine("Desktop Acrylic backdrop is not supported on this system."); }
             }
@@ -123,7 +228,7 @@ namespace mindcraft_ce
             {
                 // Clear any existing backdrop
                 ClearSystemBackdrop();
-                System.Diagnostics.Debug.WriteLine("Default color backdrop applied (or previous backdrop cleared).");
+                // System.Diagnostics.Debug.WriteLine("Default color backdrop applied (or previous backdrop cleared).");
                 isApplied = true; // Considered applied as it's the fallback
             }
             return isApplied;
@@ -151,7 +256,7 @@ namespace mindcraft_ce
             {
                 contentElement.ActualThemeChanged -= Window_ThemeChanged;
             }
-            System.Diagnostics.Debug.WriteLine("Backdrop resources cleaned up.");
+            // System.Diagnostics.Debug.WriteLine("Backdrop resources cleaned up.");
         }
 
         private void Window_ThemeChanged(FrameworkElement sender, object args)

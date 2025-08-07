@@ -9,8 +9,8 @@
 
   <Identity
     Name="4ac2afb2-ff53-42be-b138-c23cb035b720"
-    Publisher="CN=robus"
-    Version="1.0.0.0" />
+    Publisher="CN=uukelele"
+    Version="0.0.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="4ac2afb2-ff53-42be-b138-c23cb035b720" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -39,8 +39,10 @@
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"  Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
       </uap:VisualElements>
     </Application>
   </Applications>
