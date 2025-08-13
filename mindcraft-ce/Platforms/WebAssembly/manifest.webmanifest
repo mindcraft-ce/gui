@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "mindcraft-ce",
+  "display": "standalone",
+  "name": "mindcraft-ce",
+  "short_name": "mindcraft-ce",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}
