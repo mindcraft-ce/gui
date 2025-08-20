@@ -1,0 +1,34 @@
+<Project Sdk="Uno.Sdk">
+  <PropertyGroup>
+    <!--<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-browserwasm;net9.0-desktop</TargetFrameworks>-->
+    <TargetFrameworks>net8.0-desktop</TargetFrameworks>
+
+    <OutputType>Exe</OutputType>
+    <UnoSingleProject>true</UnoSingleProject>
+
+    <!-- Display name -->
+    <ApplicationTitle>mindcraft-ce</ApplicationTitle>
+    <!-- App Identifier -->
+    <ApplicationId>com.mindcraft-ce</ApplicationId>
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+    <!-- Package Publisher -->
+    <ApplicationPublisher>mindcraft-ce</ApplicationPublisher>
+    <!-- Package Description -->
+    <Description>The open-source platform for crafting intelligent, collaborative agents in Minecraft using Large Language Models.</Description>
+
+    <!--
+      UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
+      https://aka.platform.uno/singleproject-features
+    -->
+    <UnoFeatures>
+      SkiaRenderer;
+    </UnoFeatures>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" />
+    <UnoIcon Include="Assets\icon.ico" />
+  </ItemGroup>
+
+</Project>
