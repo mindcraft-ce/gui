@@ -50,7 +50,7 @@ jobs:
       run: dotnet publish -c Release --framework net8.0-windows10.0.19041 --self-contained true -r win-x64 -o release/win-x64
 
     - name: Build and Publish Windows arm64
-      run: dotnet publish -c Release --framework net8.0-windows10.0.19041 --self-contained true -r win-arm64 -o release/win-arm64
+      run: dotnet publish -c Release --framework net8.0-windows10.0.19041 --self-contained true -r win-arm64 -o release/win-arm64 -p:PlatformTarget=arm64
 
     - name: Upload Windows Artifacts
       uses: actions/upload-artifact@v4
